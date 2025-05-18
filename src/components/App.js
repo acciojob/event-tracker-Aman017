@@ -10,7 +10,6 @@ const App = () => {
   const [filter, setFilter] = useState('all');
   const [showModal, setShowModal] = useState(false);
 
-  // Generate days for current month
   const currentDate = new Date();
   const currentMonth = currentDate.getMonth();
   const currentYear = currentDate.getFullYear();
@@ -37,14 +36,12 @@ const App = () => {
     if (!eventTitle.trim()) return;
 
     if (selectedEvent) {
-      // Update existing event
-      setEvents(events.map(event => 
-        event === selectedEvent 
-          ? { ...event, title: eventTitle, location: eventLocation } 
+      setEvents(events.map(event =>
+        event === selectedEvent
+          ? { ...event, title: eventTitle, location: eventLocation }
           : event
       ));
     } else {
-      // Create new event
       setEvents([...events, {
         id: Date.now(),
         title: eventTitle,
@@ -78,35 +75,34 @@ const App = () => {
     return true;
   });
 
-  // Render calendar days
   const renderCalendarDays = () => {
     const days = [];
     const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
-    
-    // Add empty cells for days before the first of the month
+
     for (let i = 0; i < firstDayOfMonth; i++) {
       days.push(<div key={`empty-${i}`} className="calendar-day empty"></div>);
     }
 
-    // Add actual days of the month
     for (let i = 1; i <= daysInMonth; i++) {
       const day = new Date(currentYear, currentMonth, i);
-      const dayEvents = filteredEvents.filter(event => 
+      const dayEvents = filteredEvents.filter(event =>
         new Date(event.date).toDateString() === day.toDateString()
       );
       const isPast = day < new Date();
 
       days.push(
-        <div 
-          key={`day-${i}`} 
+        <div
+          key={`day-${i}`}
           className={`calendar-day ${isPast ? 'past' : 'upcoming'}`}
+          data-testid={`calendar-day-${i}`}
           onClick={() => handleDateClick(day)}
         >
           <div className="day-number">{i}</div>
           {dayEvents.map(event => (
-            <div 
-              key={event.id} 
+            <div
+              key={event.id}
               className={`event ${isPast ? 'past-event' : 'upcoming-event'}`}
+              data-testid={`event-${event.id}`}
               onClick={(e) => handleEventClick(event, e)}
             >
               {event.title}
@@ -122,18 +118,18 @@ const App = () => {
   return (
     <div className="App">
       <h1>Event Tracker Calendar</h1>
-      
+
       <div className="filter-buttons">
-        <button className="btn" onClick={() => setFilter('all')}>All Events</button>
-        <button className="btn" onClick={() => setFilter('past')}>Past Events</button>
-        <button className="btn" onClick={() => setFilter('upcoming')}>Upcoming Events</button>
+        <button className="btn" onClick={() => setFilter('all')} data-testid="filter-all">All Events</button>
+        <button className="btn" onClick={() => setFilter('past')} data-testid="filter-past">Past Events</button>
+        <button className="btn" onClick={() => setFilter('upcoming')} data-testid="filter-upcoming">Upcoming Events</button>
       </div>
-      
+
       <div className="calendar">
         <div className="calendar-header">
-          {new Date(currentYear, currentMonth, 1).toLocaleString('default', { 
-            month: 'long', 
-            year: 'numeric' 
+          {new Date(currentYear, currentMonth, 1).toLocaleString('default', {
+            month: 'long',
+            year: 'numeric'
           })}
         </div>
         <div className="calendar-grid">
@@ -143,10 +139,9 @@ const App = () => {
           {renderCalendarDays()}
         </div>
       </div>
-      
-       
+
       {showModal && (
-        <div className="mm-popup__box">
+        <div className="mm-popup__box" data-testid="modal">
           <div className="mm-popup__box__header">
             <h3>{selectedEvent ? 'Edit Event' : 'Create Event'}</h3>
           </div>
@@ -157,6 +152,7 @@ const App = () => {
               value={eventTitle}
               onChange={(e) => setEventTitle(e.target.value)}
               className="mm-popup__input"
+              data-testid="event-title-input"
             />
             <input
               type="text"
@@ -164,21 +160,24 @@ const App = () => {
               value={eventLocation}
               onChange={(e) => setEventLocation(e.target.value)}
               className="mm-popup__input"
+              data-testid="event-location-input"
             />
           </div>
           <div className="mm-popup__box__footer">
             {selectedEvent && (
-              <button 
-                className="mm-popup__btn mm-popup__btn--danger" 
+              <button
+                className="mm-popup__btn mm-popup__btn--danger"
                 onClick={handleDelete}
+                data-testid="delete-event"
               >
                 Delete
               </button>
             )}
             <div className="mm-popup__box__footer__right-space">
-              <button 
-                className="mm-popup__btn mm-popup__btn--success" 
+              <button
+                className="mm-popup__btn mm-popup__btn--success"
                 onClick={handleSave}
+                data-testid="save-event"
               >
                 {selectedEvent ? 'Save Changes' : 'Save'}
               </button>
@@ -188,7 +187,6 @@ const App = () => {
       )}
     </div>
   );
-}
+};
 
 export default App;
-
