@@ -124,9 +124,9 @@ const App = () => {
       <h1>Event Tracker Calendar</h1>
       
       <div className="filter-buttons">
-        <button onClick={() => setFilter('all')}>All Events</button>
-        <button onClick={() => setFilter('past')}>Past Events</button>
-        <button onClick={() => setFilter('upcoming')}>Upcoming Events</button>
+        <button className="btn" onClick={() => setFilter('all')}>All Events</button>
+        <button className="btn" onClick={() => setFilter('past')}>Past Events</button>
+        <button className="btn" onClick={() => setFilter('upcoming')}>Upcoming Events</button>
       </div>
       
       <div className="calendar">
@@ -144,31 +144,43 @@ const App = () => {
         </div>
       </div>
       
+       
       {showModal && (
-        <div className="modal">
-          <div className="modal-content">
-            <h2>{selectedEvent ? 'Edit Event' : 'Add Event'}</h2>
+        <div className="mm-popup__box">
+          <div className="mm-popup__box__header">
+            <h3>{selectedEvent ? 'Edit Event' : 'Create Event'}</h3>
+          </div>
+          <div className="mm-popup__box__body">
             <input
               type="text"
               placeholder="Event Title"
               value={eventTitle}
               onChange={(e) => setEventTitle(e.target.value)}
+              className="mm-popup__input"
             />
             <input
               type="text"
               placeholder="Event Location"
               value={eventLocation}
               onChange={(e) => setEventLocation(e.target.value)}
+              className="mm-popup__input"
             />
-            <div className="modal-buttons">
-              {selectedEvent && (
-                <button className="delete" onClick={handleDelete}>Delete</button>
-              )}
-              <button className="save" onClick={handleSave}>
-                {selectedEvent ? 'Update' : 'Save'}
+          </div>
+          <div className="mm-popup__box__footer">
+            {selectedEvent && (
+              <button 
+                className="mm-popup__btn mm-popup__btn--danger" 
+                onClick={handleDelete}
+              >
+                Delete
               </button>
-              <button className="cancel" onClick={() => setShowModal(false)}>
-                Cancel
+            )}
+            <div className="mm-popup__box__footer__right-space">
+              <button 
+                className="mm-popup__btn mm-popup__btn--success" 
+                onClick={handleSave}
+              >
+                {selectedEvent ? 'Save Changes' : 'Save'}
               </button>
             </div>
           </div>
@@ -179,3 +191,4 @@ const App = () => {
 }
 
 export default App;
+
